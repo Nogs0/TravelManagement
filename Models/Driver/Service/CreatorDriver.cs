@@ -10,5 +10,14 @@ namespace TravelManagement.Models.Driver.Service
         {
             _repository = repository;
         }
+
+        public async Task<DriverModel> CreateAsync(DriverModel input)
+        {
+            /*
+             *  >> if necessary you can add your preferences here <<
+            */
+
+            return await _repository.CreateAsync(input);
+        }
     }
 }
