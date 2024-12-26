@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TravelManagement.Models.Shared.CustomAttributes;
-using TravelManagement.Models.Shared;
+using TravelManagement.Models.Shared.AuditedEntity;
 
 namespace TravelManagement.Models.Driver
 {

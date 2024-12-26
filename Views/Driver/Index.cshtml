@@ -1,0 +1,12 @@
+﻿@using TravelManagement.Models.Driver
+@model List<DriverModel>
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <ul>
+        @foreach (var driver in Model)
+        {
+            <li>@driver.Name</li>
+        }
+    </ul>
+</div>

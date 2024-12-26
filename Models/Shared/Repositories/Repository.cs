@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using TravelManagement.Database;
+using TravelManagement.Models.Shared.AuditedEntity;
 
 namespace TravelManagement.Models.Shared.Repository
 {

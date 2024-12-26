@@ -1,4 +1,4 @@
-﻿namespace TravelManagement.Models.Shared
+﻿namespace TravelManagement.Models.Shared.AuditedEntity
 {
     public interface IAuditedEntity<T> : IEntity<T>, ISoftDelete
     {

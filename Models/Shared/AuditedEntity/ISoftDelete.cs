@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace TravelManagement.Models.Shared
+namespace TravelManagement.Models.Shared.AuditedEntity
 {
     public interface ISoftDelete
     {

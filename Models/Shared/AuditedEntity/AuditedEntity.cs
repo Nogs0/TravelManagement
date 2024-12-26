@@ -1,5 +1,4 @@
-﻿
-namespace TravelManagement.Models.Shared
+﻿namespace TravelManagement.Models.Shared.AuditedEntity
 {
     public class AuditedEntity<T> : IAuditedEntity<T>
     {
