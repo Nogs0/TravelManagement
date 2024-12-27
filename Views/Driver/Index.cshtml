@@ -2,11 +2,107 @@
 @model List<DriverModel>
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <ul>
-        @foreach (var driver in Model)
-        {
-            <li>@driver.Name</li>
-        }
-    </ul>
+    <h1 class="display-4">Motoristas</h1>
 </div>
+
+<div class="modal fade" id="createOrEditModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editando motorista</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="inputName">Nome</label>
+                    <input type="text" name="name" id="inputName" class="form-control" aria-label="Insira o nome" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <div class="mb-3">
+                    <label for="inputPhoneNumber" >Número de telefone</label>
+                    <input type="text" name="phoneNumber" id="inputPhoneNumber" class="form-control" aria-label="Insira o telefone" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <div class="mb-3">
+                    <label for="inputCPF">CPF</label>
+                    <input type="text" name="cpf" id="inputCPF" class="form-control" aria-label="Insira o CPF" aria-describedby="inputGroup-sizing-sm">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Telefone</th>
+            <th>CPF</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            var @driver = Model[i];
+            <tr>
+                <td class="col-md-1">@(i + 1)</td>
+                <td class="col-md-3">@driver.Name</td>
+                <td class="col-md-3">@driver.PhoneNumber</td>
+                <td class="col-md-3">@driver.CPF</td>
+                <td class="col-md-2">
+                    <button data-bs-toggle="modal" data-bs-target="#createOrEditModal" class="btn-editar btn btn-primary" data-bs-id="@driver.Id">Editar</button>
+                    <button class="btn-relatorio btn btn-success" data-id="@driver.Id">Relatório</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="buttons-container">
+    <button class="btn-criar btn-success" data-bs-toggle="modal" data-bs-target="#createOrEditModal" data-bs-id="0">Criar motorista</button>
+</div>
+
+<script>
+    const botoesRelatorio = document.querySelectorAll(".btn-relatorio");
+    botoesRelatorio.forEach(botao => {
+        botao.addEventListener('click', (event) => {
+            const id = event.target.getAttribute('data-id');
+
+            alert(`relatório registro: ${id}`);
+        })
+    });
+
+    const createOrEditModal = document.getElementById('createOrEditModal');
+    if (createOrEditModal) {
+      createOrEditModal.addEventListener('show.bs.modal', event => {
+        // Button that triggered the modal
+        const button = event.relatedTarget;
+        // Extract info from data-bs-* attributes
+        const modalTitle = createOrEditModal.querySelector('.modal-title');
+
+        const id = button.getAttribute('data-bs-id');
+        if (id == 0) {
+            modalTitle.textContent = `Criando motorista`;
+        }
+        else {
+            modalTitle.textContent = `Editando motorista (COD: ${id})`;
+        }
+
+        // Update the modal's content.
+        const modalBodyInput = createOrEditModal.querySelector('.modal-body input')
+
+        modalBodyInput.value = recipient;
+      })
+    }
+</script>
+
+<style>
+    .buttons-container {
+        width: 100%;
+        align-items: end;
+        justify-content: end;
+    }
+</style>
