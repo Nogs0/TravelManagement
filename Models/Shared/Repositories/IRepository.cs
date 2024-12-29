@@ -7,6 +7,7 @@
         Task<Model> CreateAsync(Model entity);
         Task<PKType> CreateAndGetIdAsync(Model entity);
         Task<IEnumerable<Model>> GetAllAsync();
+        IQueryable<Model> GetAll();
         Task<Model> GetAsync(PKType id);
         Task<Model> UpdateAsync(Model entity);
         Task<PKType> UpdateAndGetIdAsync(Model entity);

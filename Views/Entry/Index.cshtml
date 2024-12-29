@@ -1,0 +1,145 @@
+﻿@using TravelManagement.Models.Driver
+@using TravelManagement.Models.Entries
+@model IEnumerable<EntryModel>
+
+<div class="text-center">
+    <h1 class="display-4">Entradas</h1>
+</div>
+
+<div class="modal fade" id="createOrEditModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editando entrada</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/Entry/Save" method="post">
+                <div class="modal-body">
+                    <input hidden type="number" name="id" id="inputId" class="form-control">
+                    <div class="mb-3">
+                        <label for="inputRoute">Rota</label>
+                        <textarea type="text" name="route" id="inputRoute" class="form-control" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputValue">Valor</label>
+                        <input type="text" name="value" id="inputValue" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputDate">Data</label>
+                        <input type="text" name="date" id="inputDate" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputDriver">Motorista</label>
+                        <select name="driverId" id="inputDriver" class="form-control">
+                            <option>Selecione um motorista</option>
+                            @foreach (var driver in ViewBag.Drivers)
+                            {
+                                <option value="@driver.Value">@driver.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <input type="checkbox" id="inputIsExtra" class="form-check-input" name="isExtra" />
+                        <label class="form-check-label" for="inputIsExtra">É extra</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Rota</th>
+            <th>É extra</th>
+            <th>Data</th>
+            <th>Valor</th>
+            <th>Motorista</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in Model)
+        {
+            <tr>
+                <td class="col-md-1">@entry.Id</td>
+                <td class="col-md-3">@entry.Route</td>
+                <td class="col-md-1">@(entry.IsExtra ? "Sim" : "Não")</td>
+                <td class="col-md-2">@entry.Date</td>
+                <td class="col-md-2">@entry.Value</td>
+                <td class="col-md-2">@entry.Driver.Name</td>
+                <td class="col-md-1">
+                    <button data-bs-toggle="modal" data-bs-target="#createOrEditModal" class="btn-editar btn btn-primary" data-bs-id="@entry.Id">Editar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="buttons-container">
+    <button class="btn-criar btn btn-success" data-bs-toggle="modal" data-bs-target="#createOrEditModal" data-bs-id="0">Criar entrada</button>
+</div>
+
+<script>
+
+    const createOrEditModal = document.getElementById('createOrEditModal');
+    if (createOrEditModal) {
+      createOrEditModal.addEventListener('show.bs.modal', event => {
+        const button = event.relatedTarget; // relatedTarget retorna o elemento que fez com que o modal abrisse
+        const modalTitle = createOrEditModal.querySelector('.modal-title');
+
+        const inputRoute = document.getElementById('inputRoute');
+        const inputIsExtra = document.getElementById('inputIsExtra');
+        const inputDriver = document.getElementById('inputDriver');
+        const inputId = document.getElementById('inputId');
+
+        const id = button.getAttribute('data-bs-id'); // aqui posso pegar qualquer atributo que adicionar no HTML
+        if (id == 0) {
+            modalTitle.textContent = `Criando entrada`;
+            inputRoute.value = "";
+            inputIsExtra.value = undefined;
+            inputDriver.value = null;
+            inputValue.value = null;
+            inputDate.value = null;
+            inputId.value = null;
+        }
+        else {
+            modalTitle.textContent = `Editando entrada (COD: ${id})`;
+
+            $(document).ready(function() {
+                    $.ajax({
+                        url: `/Entry/Get?id=${id}`, // URL do método
+                        type: 'POST',             // Método HTTP
+                        success: function(response) {
+                            console.log(response)
+                            inputRoute.value = response.route;
+                            inputIsExtra.checked = response.isExtra;
+                            inputDriver.value = response.driverId;
+                            inputValue.value = response.value;
+                            inputDate.value = response.date;
+                            inputId.value = response.id;
+                        },
+                        error: function() {
+                            alert("Erro ao chamar o método.");
+                        }
+                    });
+            });
+        }
+      })
+    }
+</script>
+
+<style>
+    .buttons-container {
+        width: 100%;
+        align-items: end;
+        justify-content: end;
+        display: flex;
+    }
+</style>

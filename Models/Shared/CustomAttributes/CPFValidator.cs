@@ -43,24 +43,36 @@ namespace TravelManagement.Models.Shared.CustomAttributes
 
         private bool ValidatorIfDigitsAreValid(string cpf)
         {
-            int totalForTheFirstDigit = GetSumForDigit(cpf, BASE_FIRST_DIGIT);
-            if (cpf[INDEX_FIRST_DIGIT] != GetDigit(totalForTheFirstDigit))
+            int totalForTheFirstDigit = GetSumForFirstDigit(cpf, BASE_FIRST_DIGIT);
+            if (cpf[INDEX_FIRST_DIGIT] - '0' != GetDigit(totalForTheFirstDigit))
                 return false;
 
-            int totalForTheSecondDigit = GetSumForDigit(cpf, BASE_SECOND_DIGIT);
-            if (cpf[INDEX_SECOND_DIGIT] != GetDigit(totalForTheSecondDigit))
+            int totalForTheSecondDigit = GetSumForSecondDigit(cpf, BASE_SECOND_DIGIT);
+            if (cpf[INDEX_SECOND_DIGIT] - '0' != GetDigit(totalForTheSecondDigit))
                 return false;
 
             return true;
         }
 
-        private int GetSumForDigit(string cpf, int baseCalc)
+        private int GetSumForFirstDigit(string cpf, int baseCalc)
         {
             int total = 0;
-            for (int i = 0; i < baseCalc; i++)
+            for (int i = 0; i < baseCalc - 1; i++)
             {
                 var digit = cpf[i];
-                total += SumPerDigit(baseCalc, digit, i);
+                total += SumPerDigit(baseCalc, digit - '0', i);
+            }
+
+            return total;
+        }
+
+        private int GetSumForSecondDigit(string cpf, int baseCalc)
+        {
+            int total = 0;
+            for (int i = 0; i < baseCalc - 1; i++)
+            {
+                var digit = cpf[i];
+                total += SumPerDigit(baseCalc, digit - '0', i);
             }
 
             return total;
@@ -73,11 +85,13 @@ namespace TravelManagement.Models.Shared.CustomAttributes
 
         private int GetDigit(int total)
         {
-            if (total >= 10)
+            int resto = total % 11;
+            resto = 11 - resto;
+
+            if (resto >= 10)
                 return 0;
 
-            int resto = total % 11;
-            return 11 - resto;
+            return resto;
         }
     }
 }

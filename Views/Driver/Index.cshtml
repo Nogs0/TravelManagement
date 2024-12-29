@@ -12,24 +12,27 @@
                 <h5 class="modal-title">Editando motorista</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="inputName">Nome</label>
-                    <input type="text" name="name" id="inputName" class="form-control" aria-label="Insira o nome" aria-describedby="inputGroup-sizing-sm">
+            <form action="/Driver/Save" method="post">
+                <div class="modal-body">
+                    <input hidden type="number" name="id" id="inputId" class="form-control">
+                    <div class="mb-3">
+                        <label for="inputName">Nome</label>
+                        <input type="text" name="name" id="inputName" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputPhoneNumber">Número de telefone</label>
+                        <input type="text" name="phoneNumber" id="inputPhoneNumber" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputCPF">CPF</label>
+                        <input type="text" name="cpf" id="inputCPF" class="form-control" required>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="inputPhoneNumber" >Número de telefone</label>
-                    <input type="text" name="phoneNumber" id="inputPhoneNumber" class="form-control" aria-label="Insira o telefone" aria-describedby="inputGroup-sizing-sm">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
-                <div class="mb-3">
-                    <label for="inputCPF">CPF</label>
-                    <input type="text" name="cpf" id="inputCPF" class="form-control" aria-label="Insira o CPF" aria-describedby="inputGroup-sizing-sm">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Salvar</button>
-            </div>
+            </form>
         </div>
     </div>
 </div>
@@ -49,7 +52,7 @@
         {
             var @driver = Model[i];
             <tr>
-                <td class="col-md-1">@(i + 1)</td>
+                <td class="col-md-1">@driver.Id</td>
                 <td class="col-md-3">@driver.Name</td>
                 <td class="col-md-3">@driver.PhoneNumber</td>
                 <td class="col-md-3">@driver.CPF</td>
@@ -62,7 +65,7 @@
     </tbody>
 </table>
 <div class="buttons-container">
-    <button class="btn-criar btn-success" data-bs-toggle="modal" data-bs-target="#createOrEditModal" data-bs-id="0">Criar motorista</button>
+    <button class="btn-criar btn btn-success" data-bs-toggle="modal" data-bs-target="#createOrEditModal" data-bs-id="0">Criar motorista</button>
 </div>
 
 <script>
@@ -78,23 +81,38 @@
     const createOrEditModal = document.getElementById('createOrEditModal');
     if (createOrEditModal) {
       createOrEditModal.addEventListener('show.bs.modal', event => {
-        // Button that triggered the modal
-        const button = event.relatedTarget;
-        // Extract info from data-bs-* attributes
+        const button = event.relatedTarget; // relatedTarget retorna o elemento que fez com que o modal abrisse
         const modalTitle = createOrEditModal.querySelector('.modal-title');
 
-        const id = button.getAttribute('data-bs-id');
+        const inputPhoneNumber = document.getElementById('inputPhoneNumber');
+        const inputName = document.getElementById('inputName');
+        const inputCPF = document.getElementById('inputCPF');
+        const inputId = document.getElementById('inputId');
+
+        const id = button.getAttribute('data-bs-id'); // aqui posso pegar qualquer atributo que adicionar no HTML
         if (id == 0) {
             modalTitle.textContent = `Criando motorista`;
         }
         else {
             modalTitle.textContent = `Editando motorista (COD: ${id})`;
+
+            $(document).ready(function() {
+                    $.ajax({
+                        url: `/Driver/Get?id=${id}`, // URL do método
+                        type: 'POST',             // Método HTTP
+                        success: function(response) {
+                            console.log(response)
+                            inputPhoneNumber.value = response.phoneNumber;
+                            inputName.value = response.name;
+                            inputCPF.value = response.cpf;
+                            inputId.value = response.id;
+                        },
+                        error: function() {
+                            alert("Erro ao chamar o método.");
+                        }
+                    });
+            });
         }
-
-        // Update the modal's content.
-        const modalBodyInput = createOrEditModal.querySelector('.modal-body input')
-
-        modalBodyInput.value = recipient;
       })
     }
 </script>
@@ -104,5 +122,6 @@
         width: 100%;
         align-items: end;
         justify-content: end;
+        display: flex;
     }
 </style>

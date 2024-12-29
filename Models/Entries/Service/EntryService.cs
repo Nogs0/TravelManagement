@@ -1,4 +1,5 @@
-﻿using TravelManagement.Models.Entries.Service.Actions;
+﻿using TravelManagement.Models.Driver;
+using TravelManagement.Models.Entries.Service.Actions;
 using TravelManagement.Models.Shared.Service;
 
 namespace TravelManagement.Models.Entries.Service
@@ -21,9 +22,14 @@ namespace TravelManagement.Models.Entries.Service
             return await _creator.CreateAsync(input);
         }
 
-        public async Task<IEnumerable<EntryModel>> GetAllAync()
+        public IEnumerable<EntryModel> GetAll()
         {
-            return await _getter.GetAllAsync();
+            return _getter.GetAll();
+        }
+
+        public async Task<EntryModel> GetAsync(long id)
+        {
+            return await _getter.GetAsync(id);
         }
 
         public async Task<EntryModel> UpdateAsync(EntryModel input)

@@ -12,7 +12,7 @@ namespace TravelManagement.Models.Entries
         public DateTime Date { get; set; }
 
         [ForeignKey("DriverId")]
-        public DriverModel Driver { get; set; }
-        public long DriverId { get; set; }
+        public DriverModel? Driver { get; set; }
+        public required long DriverId { get; set; }
     }
 }

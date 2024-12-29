@@ -24,7 +24,7 @@ namespace TravelManagement.Models.Shared.Repository
             await _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
 
-            var saved = _dbSet.Last();
+            var saved = _dbSet.OrderBy(x => x.Id).Last();
             if (saved == null)
                 throw new Exception("Entity is null!");
 
@@ -33,6 +33,11 @@ namespace TravelManagement.Models.Shared.Repository
         public async Task<IEnumerable<Model>> GetAllAsync()
         {
             return await _dbSet.Where(x => !x.IsDeleted).ToListAsync();
+        }
+
+        public IQueryable<Model> GetAll()
+        {
+            return _dbSet.Where(x => !x.IsDeleted);
         }
 
         public async Task<Model> GetAsync(PKType id)
@@ -45,7 +50,7 @@ namespace TravelManagement.Models.Shared.Repository
             await _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
 
-            var saved = _dbSet.Last();
+            var saved = _dbSet.OrderBy(x => x.Id).Last();
             if (saved == null)
                 throw new Exception("Entity is null!");
 

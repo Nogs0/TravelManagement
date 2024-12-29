@@ -21,10 +21,6 @@ internal class Program
         );
 
         builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
-        builder.Services.AddScoped(typeof(ICreator<,>), typeof(Creator<,>));
-        builder.Services.AddScoped(typeof(IUpdater<,>), typeof(Updater<,>));
-        builder.Services.AddScoped(typeof(IDeleter<,>), typeof(Deleter<,>));
-        builder.Services.AddScoped(typeof(IGetter<,>), typeof(Getter<,>));
 
         builder.Services.AddServicesByInterface(Assembly.GetExecutingAssembly(), "IActionBase");
         builder.Services.AddServicesByInterface(Assembly.GetExecutingAssembly(), "IServiceBase");

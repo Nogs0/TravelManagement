@@ -19,6 +19,11 @@ namespace TravelManagement.Models.Shared.Actions
             return _repository.GetAllAsync();
         }
 
+        public virtual IQueryable<Model> GetAll()
+        {
+            return _repository.GetAll();
+        }
+
         public virtual Task<Model> GetAsync(PKType id)
         {
             return _repository.GetAsync(id);
