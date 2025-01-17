@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TravelManagement.Dtos.Entries;
 using TravelManagement.Models.Driver.Service;
-using TravelManagement.Models.Driver;
 using TravelManagement.Models.Entries;
 using TravelManagement.Models.Entries.Service;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TravelManagement.Controllers
 {
@@ -20,19 +19,19 @@ namespace TravelManagement.Controllers
         public async Task<IActionResult> Index()
         {
             var drivers = await _driverService.GetAllAsync();
-            ViewBag.Drivers = drivers.Select(x => new SelectListItem(){ Text = x.Name, Value = x.Id.ToString() }).ToList();
+            ViewBag.Drivers = drivers;
             var entries = _entryService.GetAll().ToList();
 
             return View(entries);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save(EntryModel input)
+        public async Task<IActionResult> Save(EntryInput input)
         {
             if (input.Id > 0)
-                await Update(input);
+                await Update(new EntryModel(input));
             else
-                await Create(input);
+                await Create(new EntryModel(input));
 
             return RedirectToAction("Index");
         }

@@ -32,16 +32,16 @@
                         <label for="inputDriver">Motorista</label>
                         <select name="driverId" id="inputDriver" class="form-control">
                             <option>Selecione um motorista</option>
-                            @foreach (var driver in ViewBag.Drivers)
+                            @foreach (DriverModel driver in ViewBag.Drivers)
                             {
-                                <option value="@driver.Value">@driver.Text</option>
+                                <option value="@driver.Id">@driver.Name</option>
                             }
                         </select>
                     </div>
                     <div class="mb-3">
-                        <input type="checkbox" id="inputIsExtra" class="form-check-input" name="isExtra" />
+                            <input type="checkbox" id="inputIsExtra" class="form-check-input" name="isExtra"/>
                         <label class="form-check-label" for="inputIsExtra">É extra</label>
-                    </div>
+                    </div>  
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
