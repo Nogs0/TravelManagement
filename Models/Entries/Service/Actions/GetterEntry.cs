@@ -20,8 +20,18 @@ namespace TravelManagement.Models.Entries.Service.Actions
 
         public override async Task<EntryModel> GetAsync(long id)
         {
-            return await _repository.GetAll().Include(x => x.Driver).FirstOrDefaultAsync(x => x.Id == id) ?? 
+            return await _repository.GetAll()
+                                    .Include(x => x.Driver)
+                                    .FirstOrDefaultAsync(x => x.Id == id) ?? 
                 throw new Exception("Entity not found");
+        }
+
+        public async Task<List<EntryModel>> GetAllByDriverId(long driverId)
+        {
+            return await _repository.GetAll()
+                                    .Include(x => x.Driver)
+                                    .Where(x => x.DriverId == driverId)
+                                    .ToListAsync();
         }
     }
 }
