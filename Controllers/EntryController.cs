@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TravelManagement.Dtos.Entries;
 using TravelManagement.Models.Driver.Service;
 using TravelManagement.Models.Entries;
@@ -6,6 +7,7 @@ using TravelManagement.Models.Entries.Service;
 
 namespace TravelManagement.Controllers
 {
+    [Authorize]
     public class EntryController : Controller
     {
         private readonly EntryService _entryService;
@@ -38,7 +40,7 @@ namespace TravelManagement.Controllers
 
         private async Task Create(EntryModel input)
         {
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
                 await _entryService.CreateAsync(input);
         }
 

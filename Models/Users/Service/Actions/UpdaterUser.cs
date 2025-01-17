@@ -3,7 +3,7 @@ using TravelManagement.Models.Shared.Repository;
 
 namespace TravelManagement.Models.Users.Service.Actions
 {
-    public class UpdaterUser : Updater<UserModel, long>
+    public class UpdaterUser : Updater<UserModel, long>, IActionBase
     {
         public UpdaterUser(IRepository<UserModel, long> repository) 
             : base(repository)

@@ -36,6 +36,11 @@ namespace TravelManagement.Models.Users.Service
             return await _getter.GetAsync(id);
         }
 
+        public async Task<UserModel> GetByUsernameAsync(string username)
+        {
+            return await _getter.GetByUsernameAsync(username);
+        }
+
         public async Task<UserModel> UpdateAsync(UserModel entity)
         {
             return await _updater.UpdateAsync(entity);
@@ -46,3 +51,4 @@ namespace TravelManagement.Models.Users.Service
             await _deleter.DeleteAsync(id);
         }
     }
+}

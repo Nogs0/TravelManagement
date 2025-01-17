@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TravelManagement.Models.Driver;
 using TravelManagement.Models.Driver.Service;
 
 namespace TravelManagement.Controllers
 {
+    [Authorize]
     public class DriverController : Controller
     {
         private readonly DriverService _driverService;
@@ -32,7 +34,7 @@ namespace TravelManagement.Controllers
 
         private async Task Create(DriverModel input)
         {
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
                 await _driverService.CreateAsync(input);
         }
 

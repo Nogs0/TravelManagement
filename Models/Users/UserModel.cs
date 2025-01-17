@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using TravelManagement.Dtos.Authentication;
 using TravelManagement.Models.Shared.AuditedEntity;
 
 namespace TravelManagement.Models.Users
@@ -7,9 +8,15 @@ namespace TravelManagement.Models.Users
     public class UserModel : AuditedEntity<long>
     {
         public string Username { get; set; }
-        public string NormalizedUsername { get; set; }
-        private string HashedPassword { get; set; }
-        private byte[] Salt { get; set; }
+        public string HashedPassword { get; set; }
+        public byte[] Salt { get; set; }
+
+        public void SetPassword(string password)
+        {
+            GenerateSalt();
+            HashedPassword = HashPassword(password, Salt);
+        }
+
         private void GenerateSalt()
         {
             var salt = new byte[16];
@@ -18,12 +25,6 @@ namespace TravelManagement.Models.Users
                 rng.GetBytes(salt);
             }
             Salt = salt;
-        }
-
-        public void SetPassword(string password)
-        {
-            GenerateSalt();
-            HashedPassword = HashPassword(password, Salt);
         }
 
         private static string HashPassword(string password, byte[] salt)
@@ -39,9 +40,17 @@ namespace TravelManagement.Models.Users
             }
         }
 
-        public bool VerifyPassword(string password)
+        public bool IsCorrectPassword(string password)
         {
             return HashedPassword == HashPassword(password, Salt);
+        }
+
+        public UserModel() { }
+
+        public UserModel(SignUpInput input)
+        {
+            Username = input.Username;
+            SetPassword(input.Password);
         }
     }
 }

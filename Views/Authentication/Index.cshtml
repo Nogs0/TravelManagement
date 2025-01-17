@@ -1,0 +1,24 @@
+﻿<div class="text-center">
+    <h1 class="display-4">Entrar</h1>
+</div>
+<form action="/Authentication/Login" method="POST">
+    <div class="m-auto w-25">
+        <div class="mb-3">
+            <label class="form-label">Usuário</label>
+            <input type="text" class="form-control" name="Username" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Senha</label>
+            <input type="password" name="password" class="form-control" />
+        </div>
+        <div class="mb-3 d-flex justify-content-between align-items-center">
+            <button type="submit" class="btn btn-primary">Confirmar</button>
+            <button type="button" onclick="cadastrar()" class="btn btn-secondary">Cadastrar</button>
+        </div>
+    </div>
+</form>
+<script>
+    function cadastrar() {
+        location.href = "/Authentication/SignUp"
+    }
+</script>

@@ -1,16 +1,59 @@
-using TravelManagement.Database;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using TravelManagement.Models.Shared.Repository;
-using TravelManagement.Models.Shared.Service;
-using TravelManagement.Models.Shared.Actions;
+using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
-using TravelManagement.DependencyInjection;
-using TravelManagement.Models.Driver.Service;
+using System.Text;
+using TravelManagement.Database;
+using TravelManagement.Models.Shared.Repository;
+using TravelManagement.Services.Authentication;
+using TravelManagement.Services.DependencyInjection;
 internal class Program
 {
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        var jwtSection = builder.Configuration.GetSection("JWT");
+        builder.Services.Configure<JWTSettings>(jwtSection);
+
+        var jwtSettings = jwtSection.Get<JWTSettings>();
+
+        AuthenticationHelper.Configure(jwtSettings);
+
+        var key = Encoding.ASCII.GetBytes(jwtSettings.SecretKey);
+
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidAudience = jwtSettings.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        //Insere o token em todas as requisições
+                        if (context.Request.Cookies.ContainsKey(AuthenticationConsts.CookieAuthName))
+                        {
+                            context.Token = context.Request.Cookies[AuthenticationConsts.CookieAuthName];
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
+
+            });
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
@@ -44,7 +87,7 @@ internal class Program
 
         app.MapControllerRoute(
             name: "default",
-            pattern: "{controller=Driver}/{action=Index}");
+            pattern: "{controller=Authentication}/{action=Index}");
 
         app.Run();
     }

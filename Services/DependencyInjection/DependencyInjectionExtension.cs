@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace TravelManagement.DependencyInjection
+namespace TravelManagement.Services.DependencyInjection
 {
     public static class DependencyInjectionExtension
     {
@@ -10,7 +10,7 @@ namespace TravelManagement.DependencyInjection
 
             foreach (var type in types)
             {
-                 var interfaceType = type.GetInterfaces().FirstOrDefault(x => x.Name == interfaceName);
+                var interfaceType = type.GetInterfaces().FirstOrDefault(x => x.Name == interfaceName);
                 if (interfaceType != null)
                     services.AddScoped(type);
             }
